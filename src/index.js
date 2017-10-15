@@ -2,11 +2,13 @@ import * as d3 from 'd3';
 
 const square = d3.selectAll("rect");
 square.style("fill", "orange"); 
+let _this = {};
 
     let update = function(){
+         
         console.log("update ...");
-        var link = this.vis.selectAll("line.link")
-            .data(this.links, function(d) { return d.source.id + "-" + d.target.id; })
+        var link = _this.vis.selectAll("line.link")
+            .data(_this.links, function(d) { return d.source.id + "-" + d.target.id; })
             .attr("class", function(d){
                 return d['source']['status'] && d['target']['status'] ? 'link' :'link link_error';
             });
@@ -18,19 +20,19 @@ square.style("fill", "orange");
 
         link.exit().remove();
 
-        var node = this.vis.selectAll("g.node")
-            .data(this.nodes, function(d) { return d.id;});
+        var node = _this.vis.selectAll("g.node")
+            .data(_this.nodes, function(d) { return d.id;});
 
         var nodeEnter = node.enter().append("svg:g")
             .attr("class", "node")
-            .call(this.force.drag);
+            .call(_this.force.drag);
 
-        //Ôö¼ÓÍ¼Æ¬£¬¿ÉÒÔ¸ù¾ÝÐèÒªÀ´ÐÞ¸Ä
-        var self=this;
+        //ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½Ô¸ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Þ¸ï¿½
+        var self=_this;
         nodeEnter.append("svg:image")
             .attr("class", "circle")
             .attr("xlink:href", function(d){
-                //¸ù¾ÝÀàÐÍÀ´Ê¹ÓÃÍ¼Æ¬
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½Í¼Æ¬
                 return d.expand ? "http://ww2.sinaimg.cn/large/412e82dbjw1dsbny7igx2j.jpg" : "http://ww4.sinaimg.cn/large/412e82dbjw1dsbnxezrrpj.jpg";
             })
             .attr("x", "-32px")
@@ -48,7 +50,7 @@ square.style("fill", "orange");
 
         node.exit().remove();
 
-        this.force.start();
+        _this.force.start();
     }
 
 
@@ -56,16 +58,17 @@ square.style("fill", "orange");
         typeof(ele)=='string' && (ele=document.getElementById(ele));
         var w=ele.clientWidth,
             h=ele.clientHeight,
-            self=this;
+            self=_this;
         console.log('d3'+d3);
-        this.force = d3.forceSimulation().gravity(.05).distance(200).charge(-800).size([w, h]);
-        this.nodes=this.force.nodes();
-        this.links=this.force.links();
-        this.clickFn=function(){};
-        this.vis = d3.select(ele).append("svg:svg")
+        _this.force = d3.forceSimulation();
+        //.gravity(.05).distance(200).charge(-800).size([w, h]);
+        _this.nodes=_this.force.nodes();
+        _this.links=_this.force.links();
+        _this.clickFn=function(){};
+        _this.vis = d3.select(ele).append("svg:svg")
             .attr("width", w).attr("height", h).attr("pointer-events", "all");
 
-        this.force.on("tick", function(x) {
+        _this.force.on("tick", function(x) {
             self.vis.selectAll("g.node")
                 .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
@@ -99,7 +102,7 @@ square.style("fill", "orange");
             {source:'10.4.42.1',target:'10.4.45.1'}
         ];
 
-        var childLinks=[
+        var childLinks2=[
             {source:'10.4.43.1',target:'10.4.43.2'},
             {source:'10.4.43.1',target:'10.4.43.3'},
             {source:'10.4.43.2',target:'10.4.43.3'}
@@ -109,8 +112,8 @@ square.style("fill", "orange");
         d_links.forEach(l=>links.push(l));
 
         console.log("updating... ");
-        this.update();
+        update();
         console.log("updated");
     }
     
-    test('topo');
+    new test('topo');
